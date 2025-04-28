@@ -7,7 +7,7 @@ const Applications: React.FC = () => {
   const { applications, jobs, loading, error, updateApplication } = useJobs();
 
   const getJobDetails = (jobId: string) => {
-    return jobs.find(job => job.id === jobId);
+    return jobs.find(job => job.job_id === jobId);
   };
 
   const getStatusColor = (status: string) => {
@@ -114,7 +114,7 @@ const Applications: React.FC = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => window.open(job.application_url, '_blank')}
+                        onClick={() => window.open(job.url, '_blank')}
                       >
                         View Job
                       </Button>

@@ -1,24 +1,19 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Job, JobApplication } from '../types';
 
-interface SearchParams {
-  [key: string]: string | undefined;
-  query?: string;
-  location?: string;
-  remote?: string;
-}
-
 interface JobContextType {
   jobs: Job[];
   applications: JobApplication[];
   loading: boolean;
   error: string | null;
-  fetchJobs: (searchParams?: SearchParams) => Promise<void>;
+  fetchJobs: () => Promise<void>;
   applyToJob: (jobId: string) => Promise<void>;
   updateApplication: (applicationId: string, status: string) => Promise<void>;
 }
 
 const JobContext = createContext<JobContextType | undefined>(undefined);
+
+const TEST_USER_ID = 'test123';
 
 export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -26,19 +21,13 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchJobs = async (searchParams?: SearchParams) => {
+  const fetchJobs = async () => {
     try {
       setLoading(true);
-      // Filter out undefined values and convert to Record<string, string>
-      const params = searchParams ? Object.fromEntries(
-        Object.entries(searchParams).filter(([_, value]) => value !== undefined)
-      ) as Record<string, string> : undefined;
-      
-      const queryString = params ? new URLSearchParams(params).toString() : '';
-      const response = await fetch(`/api/jobs${queryString ? `?${queryString}` : ''}`);
+      const response = await fetch(`/jobs/${TEST_USER_ID}`);
       if (!response.ok) throw new Error('Failed to fetch jobs');
       const data = await response.json();
-      setJobs(data);
+      setJobs(data.jobs || []); // backend returns {timestamp, jobs}
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -49,7 +38,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('/api/applications');
+      const response = await fetch('/applications');
       if (!response.ok) throw new Error('Failed to fetch applications');
       const data = await response.json();
       setApplications(data);
@@ -61,7 +50,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const applyToJob = async (jobId: string) => {
     try {
       setLoading(true);
-      const response = await fetch('/api/applications', {
+      const response = await fetch('/applications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ jobId }),
@@ -79,7 +68,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const updateApplication = async (applicationId: string, status: string) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/applications/${applicationId}`, {
+      const response = await fetch(`/applications/${applicationId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),

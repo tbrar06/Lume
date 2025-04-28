@@ -48,8 +48,12 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply, isApplied = false }) =>
             </svg>
             {job.location}
           </span>
-          <span className="mx-2">•</span>
-          <span>Posted {formatDate(job.posted_date)}</span>
+          {job.posted_date && (
+            <>
+              <span className="mx-2">•</span>
+              <span>Posted {formatDate(job.posted_date)}</span>
+            </>
+          )}
         </div>
 
         {job.salary_range && (
@@ -59,7 +63,9 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply, isApplied = false }) =>
           </div>
         )}
 
-        <div className="text-sm text-gray-600 line-clamp-3">{job.description}</div>
+        {job.description && (
+          <div className="text-sm text-gray-600 line-clamp-3">{job.description}</div>
+        )}
 
         {job.requirements && job.requirements.length > 0 && (
           <div className="space-y-1">
@@ -75,21 +81,14 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply, isApplied = false }) =>
           </div>
         )}
 
-        <div className="flex justify-between items-center pt-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => window.open(job.application_url, '_blank')}
-          >
-            View Details
-          </Button>
+        <div className="flex justify-center pt-4">
           <Button
             variant="primary"
             size="sm"
-            onClick={() => onApply(job.id)}
-            disabled={isApplied}
+            onClick={() => window.open(job.url, '_blank')}
+            className="w-full"
           >
-            {isApplied ? 'Applied' : 'Apply Now'}
+            View Job on {job.source}
           </Button>
         </div>
       </div>

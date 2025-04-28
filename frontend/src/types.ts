@@ -12,22 +12,24 @@ export interface UserProfile {
 }
 
 export interface Job {
-  id: string;
+  job_id: string;
   title: string;
   company: string;
   location: string;
-  description: string;
-  requirements: string[];
+  url: string;
+  source: string;
+  description?: string | null;
+  requirements?: string[] | null;
   salary_range?: {
     min: number;
     max: number;
     currency: string;
-  };
-  posted_date: string;
-  application_url: string;
-  is_remote: boolean;
-  experience_level?: string;
-  job_type?: string;
+  } | null;
+  posted_date?: string | null;
+  is_remote?: boolean | null;
+  num_applicants?: number | null;
+  experience_level?: string | null;
+  job_type?: string | null;
 }
 
 export interface JobApplication {

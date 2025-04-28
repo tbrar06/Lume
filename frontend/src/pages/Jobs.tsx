@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useJobs } from '../contexts/JobContext';
 import JobCard from '../components/JobCard';
 import Button from '../components/Button';
@@ -6,30 +6,6 @@ import Card from '../components/Card';
 
 const Jobs: React.FC = () => {
   const { jobs, applications, loading, error, fetchJobs, applyToJob } = useJobs();
-  const [searchParams, setSearchParams] = useState({
-    query: '',
-    location: '',
-    remote: false,
-  });
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Convert searchParams to the expected format
-    const params = {
-      query: searchParams.query,
-      location: searchParams.location,
-      remote: searchParams.remote.toString(),
-    };
-    fetchJobs(params);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setSearchParams(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -37,7 +13,7 @@ const Jobs: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Find Your Next Job</h1>
 
         <Card variant="elevated" className="mb-8">
-          <form onSubmit={handleSearch} className="space-y-4">
+          <form onSubmit={e => e.preventDefault()} className="space-y-4 opacity-50 pointer-events-none">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div>
                 <label htmlFor="query" className="block text-sm font-medium text-gray-700">
@@ -47,10 +23,9 @@ const Jobs: React.FC = () => {
                   type="text"
                   name="query"
                   id="query"
-                  value={searchParams.query}
-                  onChange={handleInputChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   placeholder="e.g. Software Engineer"
+                  disabled
                 />
               </div>
 
@@ -62,10 +37,9 @@ const Jobs: React.FC = () => {
                   type="text"
                   name="location"
                   id="location"
-                  value={searchParams.location}
-                  onChange={handleInputChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   placeholder="e.g. San Francisco"
+                  disabled
                 />
               </div>
 
@@ -75,9 +49,8 @@ const Jobs: React.FC = () => {
                     type="checkbox"
                     name="remote"
                     id="remote"
-                    checked={searchParams.remote}
-                    onChange={handleInputChange}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    disabled
                   />
                   <label htmlFor="remote" className="ml-2 block text-sm text-gray-900">
                     Remote Only
@@ -87,7 +60,7 @@ const Jobs: React.FC = () => {
             </div>
 
             <div className="flex justify-end">
-              <Button type="submit" isLoading={loading}>
+              <Button type="submit" isLoading={loading} disabled>
                 Search Jobs
               </Button>
             </div>
@@ -108,10 +81,10 @@ const Jobs: React.FC = () => {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {jobs.map(job => (
               <JobCard
-                key={job.id}
+                key={job.job_id}
                 job={job}
                 onApply={applyToJob}
-                isApplied={applications.some(app => app.job_id === job.id)}
+                isApplied={applications.some(app => app.job_id === job.job_id)}
               />
             ))}
           </div>

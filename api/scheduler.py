@@ -76,7 +76,7 @@ class JobScheduler:
         try:
             # TODO Should get this from your database
             # For now, use a hardcoded list of user IDs
-            user_ids = ["demo123"] 
+            user_ids = ["demo123", "test123"]  
 
             for user_id in user_ids:
                 await self._get_daily_jobs_for_user(user_id)
@@ -93,6 +93,14 @@ class JobScheduler:
             id="daily_job_scraping",
             name="Daily job scraping task",
             replace_existing=True
+        )
+        
+        # Run initial job scraping
+        self.scheduler.add_job(
+            self._daily_job_scraping,
+            'date',  # Run once immediately
+            id="initial_job_scraping",
+            name="Initial job scraping task"
         )
         
         self.scheduler.start()
