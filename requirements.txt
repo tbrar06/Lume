@@ -1,0 +1,14 @@
+uagents==0.11.0
+beautifulsoup4>=4.12.0
+requests>=2.31.0
+python-dotenv>=1.0.0
+pydantic>=1.10.2,<2.0.0
+openai>=1.12.0
+fastapi==0.95.2
+uvicorn>=0.20.0,<0.21.0
+python-dotenv==1.0.1
+aiohttp==3.9.3
+pytest==8.0.1
+pytest-asyncio==0.23.5
+python-multipart==0.0.9
+apscheduler==3.10.4 

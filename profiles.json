@@ -1,0 +1,27 @@
+{
+  "test123": {
+    "user_id": "test123",
+    "name": "Test User",
+    "email": "test@example.com",
+    "skills": [
+      "Python",
+      "Machine Learning",
+      "Data Science"
+    ],
+    "experience_years": 5.0,
+    "preferred_roles": [
+      "Software Engineer",
+      "Data Scientist"
+    ],
+    "preferred_locations": [
+      "San Francisco",
+      "Remote"
+    ],
+    "weekly_application_goal": 10,
+    "preferred_industries": [
+      "Technology",
+      "Finance"
+    ],
+    "remote_preference": true
+  }
+}
