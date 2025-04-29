@@ -16,6 +16,7 @@ from agents.profile_agent import ProfileAgent
 from agents.job_scraper_agent import JobScraperAgent
 from api.scheduler import JobScheduler
 from agents.application_agent import ApplicationAgent
+from models.user_profile import SkillCategory
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -59,7 +60,7 @@ class UserProfileCreate(BaseModel):
     user_id: str
     name: str
     email: str
-    skills: List[str]
+    skills: SkillCategory
     experience_years: float
     preferred_roles: List[str]
     preferred_locations: List[str]
@@ -70,7 +71,7 @@ class UserProfileCreate(BaseModel):
 class UserProfileUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[str] = None
-    skills: Optional[List[str]] = None
+    skills: Optional[SkillCategory] = None
     experience_years: Optional[float] = None
     preferred_roles: Optional[List[str]] = None
     preferred_locations: Optional[List[str]] = None

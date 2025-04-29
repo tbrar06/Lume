@@ -81,12 +81,12 @@ class ProfileAgent:
             profile = UserProfile(**profile_data)
             
             # Store profile
-            storage.save_item("profiles", profile.user_id, profile.model_dump())
+            storage.save_item("profiles", profile.user_id, profile.dict())
             
             return AgentResponse(
                 status="success",
                 message="Profile created successfully",
-                profile=profile.model_dump()
+                profile=profile.dict()
             )
             
         except ValidationError as e:
@@ -116,12 +116,12 @@ class ProfileAgent:
             updated_profile = UserProfile(**profile_data)
             
             # Update profile
-            storage.save_item("profiles", user_id, updated_profile.model_dump())
+            storage.save_item("profiles", user_id, updated_profile.dict())
             
             return AgentResponse(
                 status="success",
                 message="Profile updated successfully",
-                profile=updated_profile.model_dump()
+                profile=updated_profile.dict()
             )
             
         except ValidationError as e:

@@ -1,53 +1,108 @@
 {
-    "test123": {
-      "user_id": "test123",
-      "name": "Test User",
-      "email": "test@example.com",
-      "skills": {
-        "programming_languages": ["Python", "JavaScript"],
-        "frameworks_and_tools": ["React", "Django"],
-        "certifications": ["AWS Certified Developer"],
-        "technologies": ["Machine Learning", "AWS"]
-      },
-      "experience_years": 5.0,
-      "preferred_roles": ["Software Engineer", "Data Scientist"],
-      "preferred_locations": ["San Francisco", "Remote"],
-      "weekly_application_goal": 10,
-      "preferred_industries": ["Technology", "Finance"],
-      "remote_preference": true
+  "test123": {
+    "user_id": "test123",
+    "name": "Test User",
+    "email": "test@example.com",
+    "skills": {
+      "programming_languages": [
+        "Python",
+        "JavaScript"
+      ],
+      "frameworks_and_tools": [
+        "React",
+        "Django"
+      ],
+      "certifications": [
+        "AWS Certified Developer"
+      ],
+      "technologies": [
+        "Machine Learning",
+        "AWS"
+      ]
     },
-    "user123": {
-      "user_id": "user123",
-      "name": "John Doe",
-      "email": "john.doe@example.com",
-      "skills": {
-        "programming_languages": ["Python", "TypeScript"],
-        "frameworks_and_tools": ["React", "Node.js"],
-        "certifications": [],
-        "technologies": ["AWS"]
-      },
-      "experience_years": 5.5,
-      "preferred_roles": ["Software Engineer", "Full Stack Developer", "Backend Engineer"],
-      "preferred_locations": ["San Francisco, CA", "Remote"],
-      "weekly_application_goal": 10,
-      "preferred_industries": ["Technology", "Finance", "Healthcare"],
-      "remote_preference": true
+    "experience_years": 5.0,
+    "preferred_roles": [
+      "Software Engineer",
+      "Data Scientist"
+    ],
+    "preferred_locations": [
+      "San Francisco",
+      "Remote"
+    ],
+    "weekly_application_goal": 150,
+    "preferred_industries": [
+      "Technology",
+      "Finance"
+    ],
+    "remote_preference": true
+  },
+  "user123": {
+    "user_id": "user123",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "skills": {
+      "programming_languages": [
+        "Python",
+        "TypeScript"
+      ],
+      "frameworks_and_tools": [
+        "React",
+        "Node.js"
+      ],
+      "certifications": [],
+      "technologies": [
+        "AWS"
+      ]
     },
-    "user456": {
-      "user_id": "user456",
-      "name": "Jane Smith",
-      "email": "jane.smith@example.com",
-      "skills": {
-        "programming_languages": [],
-        "frameworks_and_tools": ["SQL", "Tableau"],
-        "certifications": ["PMP"],
-        "technologies": []
-      },
-      "experience_years": 3.0,
-      "preferred_roles": ["Product Manager", "Product Owner", "Program Manager"],
-      "preferred_locations": ["New York, NY", "Boston, MA"],
-      "weekly_application_goal": 5,
-      "preferred_industries": ["E-commerce", "Education", "Consulting"],
-      "remote_preference": false
-    }
+    "experience_years": 5.5,
+    "preferred_roles": [
+      "Software Engineer",
+      "Full Stack Developer",
+      "Backend Engineer"
+    ],
+    "preferred_locations": [
+      "San Francisco, CA",
+      "Remote"
+    ],
+    "weekly_application_goal": 10,
+    "preferred_industries": [
+      "Technology",
+      "Finance",
+      "Healthcare"
+    ],
+    "remote_preference": true
+  },
+  "user456": {
+    "user_id": "user456",
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "skills": {
+      "programming_languages": [],
+      "frameworks_and_tools": [
+        "SQL",
+        "Tableau"
+      ],
+      "certifications": [
+        "PMP"
+      ],
+      "technologies": []
+    },
+    "experience_years": 3.0,
+    "preferred_roles": [
+      "Product Manager",
+      "Product Owner",
+      "Program Manager"
+    ],
+    "preferred_locations": [
+      "New York, NY",
+      "Boston, MA"
+    ],
+    "weekly_application_goal": 5,
+    "preferred_industries": [
+      "E-commerce",
+      "Education",
+      "Consulting"
+    ],
+    "remote_preference": false
+  }
 }

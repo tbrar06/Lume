@@ -38,7 +38,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading 
     setFormData(prev => ({
       ...prev,
       [name]: name === 'skills' 
-        ? categorizeSkills(value)
+        ? {
+            programming_languages: value.split(',').map(item => item.trim()),
+            frameworks_and_tools: prev.skills.frameworks_and_tools,
+            certifications: prev.skills.certifications,
+            technologies: prev.skills.technologies
+          }
         : name === 'preferred_roles' || name === 'preferred_locations' || name === 'preferred_industries'
         ? value.split(',').map(item => item.trim())
         : name === 'experience_years' || name === 'weekly_application_goal'
@@ -90,17 +95,20 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading 
 
           <div className="sm:col-span-2">
             <label htmlFor="skills" className="block text-sm font-medium text-gray-700">
-              Skills (comma-separated)
+              Programming Languages (comma-separated)
             </label>
             <input
               type="text"
               name="skills"
               id="skills"
-              value={flattenSkills(formData.skills)}
+              value={formData.skills.programming_languages.join(', ')}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
+            <p className="mt-2 text-sm text-gray-500">
+              Other skills categories will be preserved during updates
+            </p>
           </div>
 
           <div>
@@ -113,10 +121,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading 
               id="experience_years"
               value={formData.experience_years}
               onChange={handleChange}
-              min="0"
-              step="0.5"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
+              min="0"
+              step="0.5"
             />
           </div>
 
@@ -130,9 +138,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading 
               id="weekly_application_goal"
               value={formData.weekly_application_goal}
               onChange={handleChange}
-              min="1"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
+              min="1"
             />
           </div>
 
@@ -181,9 +189,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading 
             />
           </div>
 
-          <div className="sm:col-span-2">
+          <div>
             <label htmlFor="remote_preference" className="block text-sm font-medium text-gray-700">
-              Remote Preference
+              Remote Work Preference
             </label>
             <select
               name="remote_preference"
