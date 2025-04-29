@@ -75,9 +75,11 @@ class JobScheduler:
         try:
             # Use the job scraper agent to get jobs based on user preferences
             jobs = await self.job_scraper_agent.scrape_jobs(
+                source="linkedin",
                 search_terms=profile.preferred_roles,
                 location=profile.preferred_locations[0] if profile.preferred_locations else None,
-                remote_only=profile.remote_preference == "remote_only"
+                remote_only=profile.remote_preference == "remote_only",
+                max_results=10  # Default to 10 jobs per user
             )
             return jobs
         except Exception as e:

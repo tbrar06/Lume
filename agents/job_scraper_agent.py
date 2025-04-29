@@ -308,3 +308,13 @@ class JobScraperAgent:
         except Exception as e:
             logger.error(f"Error running job scraper agent: {e}")
             raise
+    
+    def shutdown(self):
+        """Shutdown the job scraper agent."""
+        try:
+            logger.info("Shutting down job scraper agent...")
+            # The agent will be automatically cleaned up when the process exits
+            pass
+        except Exception as e:
+            logger.error(f"Error shutting down job scraper agent: {e}")
+            raise

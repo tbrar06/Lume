@@ -88,7 +88,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onApply, isApplied = false }) =>
             onClick={() => window.open(job.url, '_blank')}
             className="w-full"
           >
-            View Job on {job.source}
+            View Job on LinkedIn
           </Button>
         </div>
       </div>

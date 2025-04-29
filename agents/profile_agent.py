@@ -14,6 +14,7 @@ import logging
 import json
 import os
 from pydantic import ValidationError
+from typing import List
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -162,6 +163,14 @@ class ProfileAgent:
                 status="error",
                 message=str(e)
             )
+    
+    async def get_all_profiles(self) -> List[UserProfile]:
+        """Retrieve all user profiles."""
+        try:
+            return list(self.profiles.values())
+        except Exception as e:
+            logger.error(f"Error retrieving all profiles: {e}")
+            return []
     
     def save_profiles(self):
         """Save profiles to persistent storage."""

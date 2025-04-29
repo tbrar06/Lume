@@ -43,15 +43,15 @@ job_scheduler = JobScheduler()
 @app.on_event("startup")
 async def startup_event():
     # Start the job scheduler
-    job_scheduler.start()
+    await job_scheduler.start()
     # Run initial job scraping
     await job_scheduler._daily_job_scraping()
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    job_scheduler.stop()
+    await job_scheduler.stop()
     # Stop the job scraper agent
-    job_scraper_agent.agent.stop()
+    job_scraper_agent.shutdown()
 
 class UserProfileCreate(BaseModel):
     user_id: str
