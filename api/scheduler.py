@@ -88,4 +88,9 @@ class JobScheduler:
 
     def get_user_jobs(self, user_id: str) -> List[JobListing]:
         """Get the latest scraped jobs for a user"""
-        return self.jobs_data.get(user_id, []) 
+        try:
+            jobs = self.jobs_data.get(user_id, [])
+            return [JobListing(**job) if isinstance(job, dict) else job for job in jobs]
+        except Exception as e:
+            logger.error(f"Error getting jobs for user {user_id}: {e}")
+            return [] 

@@ -15,6 +15,7 @@ import asyncio
 from agents.profile_agent import ProfileAgent
 from agents.job_scraper_agent import JobScraperAgent
 from api.scheduler import JobScheduler
+from agents.application_agent import ApplicationAgent
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -39,6 +40,7 @@ app.add_middleware(
 profile_agent = ProfileAgent()
 job_scraper_agent = JobScraperAgent()
 job_scheduler = JobScheduler()
+application_agent = ApplicationAgent()
 
 @app.on_event("startup")
 async def startup_event():
@@ -52,7 +54,7 @@ async def shutdown_event():
     await job_scheduler.stop()
     # Stop the job scraper agent
     job_scraper_agent.shutdown()
-
+  
 class UserProfileCreate(BaseModel):
     user_id: str
     name: str
@@ -82,6 +84,13 @@ class JobSearchParams(BaseModel):
     remote_only: Optional[bool] = False
     max_results: Optional[int] = 10
 
+class ApplicationCreate(BaseModel):
+    job_id: str
+    user_id: str
+    company: str
+    title: str
+    job_url: str
+
 @app.post("/profiles")
 async def create_profile(profile: UserProfileCreate):
     """Create a new user profile"""
@@ -101,7 +110,7 @@ async def get_profile(user_id: str):
         response = await profile_agent.get_profile(user_id)
         if response.status == "error":
             raise HTTPException(status_code=404, detail=response.message)
-        return response
+        return {"profile": response.profile}
     except Exception as e:
         logger.error(f"Error getting profile: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -154,6 +163,46 @@ async def search_jobs(params: JobSearchParams):
         return response
     except Exception as e:
         logger.error(f"Error searching jobs: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/applications")
+async def create_application(application: ApplicationCreate):
+    """Track a new job application"""
+    try:
+        success = await application_agent.track_application(
+            job_id=application.job_id,
+            user_id=application.user_id,
+            company=application.company,
+            title=application.title,
+            job_url=application.job_url
+        )
+        if not success:
+            raise HTTPException(status_code=400, detail="Failed to track application")
+        return {"status": "success", "message": "Application tracked successfully"}
+    except Exception as e:
+        logger.error(f"Error tracking application: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/applications")
+async def get_applications():
+    """Get all applications for the current user"""
+    try:
+        # For now, use a test user ID. In production, this should come from authentication
+        user_id = "test123"
+        applications = await application_agent.get_user_applications(user_id)
+        return {"applications": applications}
+    except Exception as e:
+        logger.error(f"Error getting applications: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/metrics/{user_id}")
+async def get_user_metrics(user_id: str):
+    """Get application metrics for a user"""
+    try:
+        metrics = await application_agent.get_weekly_metrics(user_id)
+        return metrics
+    except Exception as e:
+        logger.error(f"Error getting metrics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

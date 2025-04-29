@@ -11,10 +11,8 @@ from uagents import Agent, Context
 from models.messages import ProfileMessage, AgentResponse
 from models.user_profile import UserProfile
 import logging
-import json
-import os
 from pydantic import ValidationError
-from typing import List
+from utils.storage import storage
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -41,7 +39,6 @@ class ProfileAgent:
         )
         
         self.setup_handlers()
-        self.profiles = {}
         self.load_profiles()
 
     def setup_handlers(self):
@@ -84,13 +81,12 @@ class ProfileAgent:
             profile = UserProfile(**profile_data)
             
             # Store profile
-            self.profiles[profile.user_id] = profile
-            self.save_profiles()
+            storage.save_item("profiles", profile.user_id, profile.model_dump())
             
             return AgentResponse(
                 status="success",
                 message="Profile created successfully",
-                profile=profile.dict()
+                profile=profile.model_dump()
             )
             
         except ValidationError as e:
@@ -110,23 +106,22 @@ class ProfileAgent:
         """Update an existing user profile."""
         try:
             user_id = profile_data.get("user_id")
-            if not user_id or user_id not in self.profiles:
+            if not user_id:
                 return AgentResponse(
                     status="error",
-                    message="Profile not found"
+                    message="Profile ID is required"
                 )
             
             # Validate updated data
             updated_profile = UserProfile(**profile_data)
             
             # Update profile
-            self.profiles[user_id] = updated_profile
-            self.save_profiles()
+            storage.save_item("profiles", user_id, updated_profile.model_dump())
             
             return AgentResponse(
                 status="success",
                 message="Profile updated successfully",
-                profile=updated_profile.dict()
+                profile=updated_profile.model_dump()
             )
             
         except ValidationError as e:
@@ -145,7 +140,8 @@ class ProfileAgent:
     async def get_profile(self, user_id: str) -> AgentResponse:
         """Retrieve a user profile."""
         try:
-            if user_id not in self.profiles:
+            profile_data = storage.get_item("profiles", user_id)
+            if not profile_data:
                 return AgentResponse(
                     status="error",
                     message="Profile not found"
@@ -154,7 +150,7 @@ class ProfileAgent:
             return AgentResponse(
                 status="success",
                 message="Profile retrieved successfully",
-                profile=self.profiles[user_id].dict()
+                profile=profile_data
             )
             
         except Exception as e:
@@ -164,35 +160,38 @@ class ProfileAgent:
                 message=str(e)
             )
     
-    async def get_all_profiles(self) -> List[UserProfile]:
+    async def get_all_profiles(self) -> list:
         """Retrieve all user profiles."""
         try:
-            return list(self.profiles.values())
+            profiles_data = storage.get_all_items("profiles")
+            if not isinstance(profiles_data, dict):
+                logger.error(f"Invalid profiles data type: {type(profiles_data)}")
+                return []
+            
+            profiles = []
+            for user_id, profile_data in profiles_data.items():
+                try:
+                    if isinstance(profile_data, dict):
+                        profile = UserProfile(**profile_data)
+                        profiles.append(profile)
+                    else:
+                        logger.warning(f"Skipping invalid profile data for user {user_id}")
+                except ValidationError as e:
+                    logger.error(f"Error validating profile for user {user_id}: {e}")
+                    continue
+                except Exception as e:
+                    logger.error(f"Error processing profile for user {user_id}: {e}")
+                    continue
+            
+            return profiles
         except Exception as e:
             logger.error(f"Error retrieving all profiles: {e}")
             return []
     
-    def save_profiles(self):
-        """Save profiles to persistent storage."""
-        try:
-            with open("profiles.json", "w") as f:
-                json.dump(
-                    {k: v.dict() for k, v in self.profiles.items()},
-                    f,
-                    indent=2
-                )
-        except Exception as e:
-            logger.error(f"Error saving profiles: {e}")
-    
     def load_profiles(self):
-        """Load profiles from persistent storage."""
+        """Load profiles from storage."""
         try:
-            if os.path.exists("profiles.json"):
-                with open("profiles.json", "r") as f:
-                    data = json.load(f)
-                    self.profiles = {
-                        k: UserProfile(**v) for k, v in data.items()
-                    }
+            storage.load_collection("profiles")
         except Exception as e:
             logger.error(f"Error loading profiles: {e}")
     

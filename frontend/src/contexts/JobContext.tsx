@@ -13,6 +13,7 @@ interface JobContextType {
 
 const JobContext = createContext<JobContextType | undefined>(undefined);
 
+// For now, we'll use a test user ID. In production, this should come from authentication
 const TEST_USER_ID = 'test123';
 
 export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -41,22 +42,35 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const response = await fetch('/applications');
       if (!response.ok) throw new Error('Failed to fetch applications');
       const data = await response.json();
-      setApplications(data);
+      // The backend returns {applications: [...]}
+      const applicationsArray = data.applications || [];
+      setApplications(applicationsArray);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      setApplications([]); // Set empty array on error
     }
   };
 
   const applyToJob = async (jobId: string) => {
     try {
       setLoading(true);
+      const job = jobs.find(j => j.job_id === jobId);
+      if (!job) throw new Error('Job not found');
+
       const response = await fetch('/applications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId }),
+        body: JSON.stringify({
+          job_id: jobId,
+          user_id: TEST_USER_ID,
+          company: job.company,
+          title: job.title,
+          job_url: job.url
+        }),
       });
+      
       if (!response.ok) throw new Error('Failed to apply to job');
-      await fetchApplications();
+      await fetchApplications(); // Refresh applications after applying
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -74,7 +88,7 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         body: JSON.stringify({ status }),
       });
       if (!response.ok) throw new Error('Failed to update application');
-      await fetchApplications();
+      await fetchApplications(); // Refresh applications after updating
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
