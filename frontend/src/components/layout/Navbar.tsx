@@ -3,6 +3,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { Menu, X, Bell, User, Settings, LogOut, ChevronDown, Sun, Moon, Briefcase as BriefcaseBusiness } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../contexts/AppContext';
+import { useProfile } from '../../contexts/ProfileContext';
 import Button from '../Button';
 
 const Navbar: React.FC = () => {
@@ -10,6 +11,7 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
+  const { profile } = useProfile();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleUserMenu = () => setShowUserMenu(!showUserMenu);
@@ -62,7 +64,7 @@ const Navbar: React.FC = () => {
     <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 backdrop-blur-sm bg-white/75 dark:bg-gray-900/75">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center -ml-4 sm:-ml-6 lg:-ml-8">
             <motion.div 
               className="flex-shrink-0 flex items-center cursor-pointer"
               onClick={() => navigate('/')}
@@ -140,7 +142,9 @@ const Navbar: React.FC = () => {
                 <div className="h-8 w-8 rounded-full bg-primary-500 text-white flex items-center justify-center">
                   <User className="h-4 w-4" />
                 </div>
-                <span className="text-sm font-medium hidden md:block">John Doe</span>
+                <span className="text-sm font-medium hidden md:block">
+                  {profile?.name || "User"}
+                </span>
                 <ChevronDown className="h-4 w-4" />
               </button>
               <AnimatePresence>
