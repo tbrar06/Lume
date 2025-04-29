@@ -1,11 +1,17 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 from pydantic import BaseModel, EmailStr
+
+class SkillCategory(BaseModel):
+    programming_languages: List[str] = []
+    frameworks_and_tools: List[str] = []
+    certifications: List[str] = []
+    technologies: List[str] = []
 
 class UserProfile(BaseModel):
     user_id: str
     name: str
     email: EmailStr
-    skills: List[str]
+    skills: SkillCategory
     experience_years: float
     preferred_roles: List[str]
     preferred_locations: List[str]

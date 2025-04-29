@@ -1,76 +1,105 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Briefcase, Target, Award, Sparkles } from 'lucide-react';
 import Button from '../components/Button';
 
 const features = [
   {
-    title: 'AI-Powered Job Search',
-    description: 'Get personalized job recommendations powered by advanced AI algorithms tailored to your skills and preferences.',
-    icon: (
-      <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m4 0h-1v-4h-1m-4 0h-1v-4h-1m4 0h-1v-4h-1" /></svg>
-    ),
+    icon: <Target className="h-6 w-6 text-primary-500" />,
+    title: 'Smart Job Matching',
+    description: 'AI-powered job recommendations based on your skills and preferences',
   },
   {
-    title: 'Track Applications',
-    description: 'Easily manage and track all your job applications in one place, from applied to interview to offer.',
-    icon: (
-      <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-    ),
+    icon: <Briefcase className="h-6 w-6 text-primary-500" />,
+    title: 'Application Tracking',
+    description: 'Streamlined application management and progress tracking',
   },
   {
-    title: 'Profile Management',
-    description: 'Build and update your professional profile to get matched with the best opportunities.',
-    icon: (
-      <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-    ),
+    icon: <Award className="h-6 w-6 text-primary-500" />,
+    title: 'Skills Development',
+    description: 'Track and improve your skills based on market demand',
+  },
+  {
+    icon: <Sparkles className="h-6 w-6 text-primary-500" />,
+    title: 'Career Growth',
+    description: 'Personalized insights and recommendations for career advancement',
   },
 ];
 
 const Landing: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="bg-white min-h-screen flex flex-col">
-      <header className="bg-gradient-to-r from-blue-50 to-blue-100 py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-extrabold text-gray-900 mb-4">Welcome to <span className="text-blue-600">Lume</span></h1>
-          <p className="text-xl text-gray-700 mb-8">Your AI-powered assistant for smarter, faster job searching and application tracking.</p>
-          <div className="flex justify-center space-x-4">
-            <Link to="/jobs">
-              <Button size="lg" variant="primary">Get Started</Button>
-            </Link>
-            <Link to="/profile">
-              <Button size="lg" variant="outline">Build Your Profile</Button>
-            </Link>
-          </div>
-        </div>
-      </header>
-      <main className="flex-1">
-        <section className="py-16 bg-white">
-          <div className="max-w-5xl mx-auto px-4">
-            <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Why Choose Lume?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {features.map((feature, idx) => (
-                <div key={idx} className="bg-blue-50 rounded-lg p-6 text-center shadow-sm">
-                  <div className="flex justify-center mb-4">{feature.icon}</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </div>
-              ))}
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+        <div className="text-center">
+          <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+            <span className="block">Illuminate Your</span>
+            <span className="block text-primary-600 dark:text-primary-500">Career Path</span>
+          </h1>
+          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 dark:text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+            Lume helps you navigate your career journey with AI-powered job matching, skill tracking, and personalized career insights.
+          </p>
+          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+            <div className="rounded-md shadow">
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full"
+                onClick={() => navigate('/app')}
+              >
+                Get Started
+              </Button>
             </div>
           </div>
-        </section>
-        <section className="py-16 bg-gradient-to-r from-blue-50 to-blue-100">
-          <div className="max-w-3xl mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to land your dream job?</h2>
-            <p className="text-lg text-gray-700 mb-8">Sign up, create your profile, and start applying today with Lume.</p>
-            <Link to="/jobs">
-              <Button size="lg" variant="primary">Start Now</Button>
-            </Link>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="py-12 bg-white dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className="relative p-6 bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center">
+                  {feature.icon}
+                </div>
+                <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
           </div>
-        </section>
-      </main>
-      <footer className="py-6 bg-white border-t text-center text-gray-400 text-sm">
-        &copy; {new Date().getFullYear()} Lume. All rights reserved.
-      </footer>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-primary-600 dark:bg-primary-900">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
+          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            <span className="block">Ready to take control of your career?</span>
+            <span className="block text-primary-200">Start your journey with Lume today.</span>
+          </h2>
+          <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+            <div className="inline-flex rounded-md shadow">
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => navigate('/app')}
+              >
+                Get Started
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

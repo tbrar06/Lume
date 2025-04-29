@@ -22,30 +22,20 @@ const Navigation: React.FC = () => {
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
-                to="/jobs"
+                to="/app/jobs"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  isActive('/jobs')
+                  isActive('/app/jobs')
                     ? 'border-blue-500 text-gray-900'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
               >
                 Jobs
               </Link>
-              <Link
-                to="/applications"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  isActive('/applications')
-                    ? 'border-blue-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                }`}
-              >
-                Applications
-              </Link>
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             <Link
-              to="/profile"
+              to="/app/profile"
               className="flex items-center space-x-2 text-gray-500 hover:text-gray-700"
             >
               {profile?.name ? (

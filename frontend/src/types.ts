@@ -1,14 +1,21 @@
+export interface SkillCategory {
+  programming_languages: string[];
+  frameworks_and_tools: string[];
+  certifications: string[];
+  technologies: string[];
+}
+
 export interface UserProfile {
   user_id: string;
   name: string;
   email: string;
-  skills: string[];
+  skills: SkillCategory;
   experience_years: number;
   preferred_roles: string[];
   preferred_locations: string[];
   weekly_application_goal: number;
   preferred_industries: string[];
-  remote_preference: 'remote' | 'hybrid' | 'onsite';
+  remote_preference: boolean;
 }
 
 export interface Job {

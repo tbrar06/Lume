@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict
 import logging
 import uvicorn
+import asyncio
 
 # Import our agents and scheduler
 from agents.profile_agent import ProfileAgent
@@ -41,11 +42,16 @@ job_scheduler = JobScheduler()
 
 @app.on_event("startup")
 async def startup_event():
+    # Start the job scheduler
     job_scheduler.start()
+    # Run initial job scraping
+    await job_scheduler._daily_job_scraping()
 
 @app.on_event("shutdown")
 async def shutdown_event():
     job_scheduler.stop()
+    # Stop the job scraper agent
+    job_scraper_agent.agent.stop()
 
 class UserProfileCreate(BaseModel):
     user_id: str
@@ -127,10 +133,10 @@ async def update_profile(user_id: str, profile_update: UserProfileUpdate):
 async def get_user_jobs(user_id: str):
     """Get the latest scraped jobs for a user"""
     try:
-        jobs_data = job_scheduler.get_user_jobs(user_id)
-        if not jobs_data["jobs"]:
+        jobs = job_scheduler.get_user_jobs(user_id)
+        if not jobs:
             raise HTTPException(status_code=404, detail="No jobs found for user")
-        return jobs_data
+        return {"jobs": jobs}
     except Exception as e:
         logger.error(f"Error getting jobs for user {user_id}: {e}")
         raise HTTPException(status_code=500, detail=str(e))

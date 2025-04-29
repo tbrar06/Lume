@@ -3,11 +3,23 @@
     "user_id": "test123",
     "name": "Test User",
     "email": "test@example.com",
-    "skills": [
-      "Python",
-      "Machine Learning",
-      "Data Science"
-    ],
+    "skills": {
+      "programming_languages": [
+        "Python",
+        "JavaScript"
+      ],
+      "frameworks_and_tools": [
+        "React",
+        "Django"
+      ],
+      "certifications": [
+        "AWS Certified Developer"
+      ],
+      "technologies": [
+        "Machine Learning",
+        "AWS"
+      ]
+    },
     "experience_years": 5.0,
     "preferred_roles": [
       "Software Engineer",

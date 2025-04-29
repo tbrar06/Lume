@@ -38,7 +38,12 @@ def sample_profile() -> Dict:
         "user_id": "test123",
         "name": "Test User",
         "email": "test@example.com",
-        "skills": ["Python", "Machine Learning", "Data Science"],
+        "skills": {
+            "programming_languages": ["Python", "JavaScript"],
+            "frameworks_and_tools": ["React", "Django"],
+            "certifications": ["AWS Certified Developer"],
+            "technologies": ["Machine Learning", "AWS"]
+        },
         "experience_years": 5.0,
         "preferred_roles": ["Software Engineer", "Data Scientist"],
         "preferred_locations": ["San Francisco", "Remote"],
@@ -108,7 +113,7 @@ async def test_update_profile(profile_agent, sample_profile):
     # Update profile data
     updated_data = sample_profile.copy()
     updated_data["name"] = "Updated Name"
-    updated_data["skills"].append("AWS")
+    updated_data["skills"]["technologies"].append("AWS")
     
     # Perform update
     response = await profile_agent.update_profile(updated_data)
@@ -121,7 +126,7 @@ async def test_update_profile(profile_agent, sample_profile):
     # Verify updated data
     updated_profile = response.profile
     assert updated_profile["name"] == "Updated Name"
-    assert "AWS" in updated_profile["skills"]
+    assert "AWS" in updated_profile["skills"]["technologies"]
     
     # Verify other fields remained unchanged
     assert updated_profile["user_id"] == sample_profile["user_id"]
@@ -150,7 +155,12 @@ async def test_profile_validation(profile_agent):
         "user_id": "test123",
         "name": "Test User",
         "email": "test@example.com",
-        "skills": ["Python"],
+        "skills": {
+            "programming_languages": ["Python"],
+            "frameworks_and_tools": ["Django"],
+            "certifications": [],
+            "technologies": ["AWS"]
+        },
         "experience_years": 2.0,
         "preferred_roles": ["Software Engineer"],
         "preferred_locations": ["Remote"],

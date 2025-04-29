@@ -1,33 +1,40 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ProfileProvider } from './contexts/ProfileContext';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AppProvider } from './contexts/AppContext';
 import { JobProvider } from './contexts/JobContext';
-import Navigation from './components/Navigation';
-import Jobs from './pages/Jobs';
-import Profile from './pages/Profile';
-import Applications from './pages/Applications';
+import { ProfileProvider } from './contexts/ProfileContext';
+import Layout from './components/layout/Layout';
 import Landing from './pages/Landing';
+import Dashboard from './pages/Dashboard';
+import Jobs from './pages/Jobs';
+import Applications from './pages/Applications';
+import Skills from './pages/Skills';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 
-const App: React.FC = () => {
+function App() {
   return (
-    <Router>
+    <AppProvider>
       <ProfileProvider>
         <JobProvider>
-          <div className="min-h-screen bg-gray-50">
-            <Navigation />
-            <main>
-              <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/jobs" element={<Jobs />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/applications" element={<Applications />} />
-              </Routes>
-            </main>
-          </div>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/app" element={<Layout />}>
+                <Route index element={<Navigate to="/app/dashboard" replace />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="jobs" element={<Jobs />} />
+                <Route path="applications" element={<Applications />} />
+                <Route path="skills" element={<Skills />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
+            </Routes>
+          </Router>
         </JobProvider>
       </ProfileProvider>
-    </Router>
+    </AppProvider>
   );
-};
+}
 
 export default App; 

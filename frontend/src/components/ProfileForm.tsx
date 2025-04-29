@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserProfile } from '../types';
+import { UserProfile, SkillCategory } from '../types';
 import Button from './Button';
 import Card from './Card';
 
@@ -9,6 +9,27 @@ interface ProfileFormProps {
   isLoading?: boolean;
 }
 
+const flattenSkills = (skills: SkillCategory): string => {
+  return [
+    ...skills.programming_languages,
+    ...skills.frameworks_and_tools,
+    ...skills.certifications,
+    ...skills.technologies
+  ].join(', ');
+};
+
+const categorizeSkills = (skillsString: string): SkillCategory => {
+  const skills = skillsString.split(',').map(s => s.trim()).filter(s => s);
+  // For simplicity, we'll put all skills in programming_languages category
+  // In a real app, you might want to let users choose categories or use AI to categorize
+  return {
+    programming_languages: skills,
+    frameworks_and_tools: [],
+    certifications: [],
+    technologies: []
+  };
+};
+
 const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading = false }) => {
   const [formData, setFormData] = React.useState<UserProfile>(profile);
 
@@ -16,10 +37,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading 
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'skills' || name === 'preferred_roles' || name === 'preferred_locations' || name === 'preferred_industries'
+      [name]: name === 'skills' 
+        ? categorizeSkills(value)
+        : name === 'preferred_roles' || name === 'preferred_locations' || name === 'preferred_industries'
         ? value.split(',').map(item => item.trim())
         : name === 'experience_years' || name === 'weekly_application_goal'
         ? Number(value)
+        : name === 'remote_preference'
+        ? value === 'true'
         : value
     }));
   };
@@ -71,7 +96,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading 
               type="text"
               name="skills"
               id="skills"
-              value={formData.skills.join(', ')}
+              value={flattenSkills(formData.skills)}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
@@ -158,26 +183,37 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSubmit, isLoading 
 
           <div className="sm:col-span-2">
             <label htmlFor="remote_preference" className="block text-sm font-medium text-gray-700">
-              Remote Work Preference
+              Remote Preference
             </label>
             <select
               name="remote_preference"
               id="remote_preference"
-              value={formData.remote_preference}
+              value={formData.remote_preference.toString()}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             >
-              <option value="remote">Remote</option>
-              <option value="hybrid">Hybrid</option>
-              <option value="onsite">On-site</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
             </select>
           </div>
         </div>
 
         <div className="flex justify-end">
-          <Button type="submit" isLoading={isLoading}>
-            Save Profile
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isLoading}
+            className="flex items-center"
+          >
+            {isLoading ? (
+              <>
+                <span className="animate-spin mr-2">⌛</span>
+                Saving...
+              </>
+            ) : (
+              'Save Profile'
+            )}
           </Button>
         </div>
       </form>

@@ -2,44 +2,42 @@ import React from 'react';
 import { useProfile } from '../contexts/ProfileContext';
 import ProfileForm from '../components/ProfileForm';
 import Card from '../components/Card';
+import { SkillCategory } from '../types';
+
+const getTotalSkillCount = (skills: SkillCategory): number => {
+  return (Object.values(skills) as string[][]).reduce((total, categorySkills) => total + categorySkills.length, 0);
+};
 
 const Profile: React.FC = () => {
   const { profile, loading, error, updateProfile } = useProfile();
 
-  const handleProfileUpdate = async (updatedProfile: any) => {
-    await updateProfile(updatedProfile);
-  };
-
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          {error}
-        </div>
+      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        {error}
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h3 className="text-lg font-medium text-gray-900">Profile not found</h3>
-          <p className="mt-2 text-sm text-gray-500">
-            Please try refreshing the page or contact support if the issue persists.
-          </p>
-        </div>
+      <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded">
+        No profile found. Please create one.
       </div>
     );
   }
+
+  const handleProfileUpdate = async (updatedProfile: typeof profile) => {
+    await updateProfile(updatedProfile);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -66,7 +64,7 @@ const Profile: React.FC = () => {
                 <p className="text-sm text-gray-500">Years of Experience</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold text-blue-600">{profile.skills.length}</p>
+                <p className="text-3xl font-bold text-blue-600">{getTotalSkillCount(profile.skills)}</p>
                 <p className="text-sm text-gray-500">Skills</p>
               </div>
               <div className="text-center">
